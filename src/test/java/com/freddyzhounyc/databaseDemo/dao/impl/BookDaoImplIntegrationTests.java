@@ -1,6 +1,8 @@
 package com.freddyzhounyc.databaseDemo.dao.impl;
 
 import com.freddyzhounyc.databaseDemo.TestDataUtil;
+import com.freddyzhounyc.databaseDemo.dao.AuthorDao;
+import com.freddyzhounyc.databaseDemo.domain.Author;
 import com.freddyzhounyc.databaseDemo.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,15 +17,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 public class BookDaoImplIntegrationTests {
+    private AuthorDao authorDao;
     private BookDaoImpl underTest;
 
     @Autowired
-    public BookDaoImplIntegrationTests(BookDaoImpl underTest) {
+    public BookDaoImplIntegrationTests(BookDaoImpl underTest, AuthorDao authorDao) {
+        this.authorDao = authorDao;
         this.underTest = underTest;
     }
 
     @Test
     public void testThatBookCanBeCreatedAndRecalled() {
+        Author author = TestDataUtil.createTestAuthor();
+        authorDao.create(author);
         Book book = TestDataUtil.createTestBook();
         underTest.create(book);
         Optional<Book> result = underTest.findOne(book.getIsbn());
