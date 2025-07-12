@@ -50,4 +50,17 @@ public class BookDaoImplTests {
                 any(BookDaoImpl.BookRowMapper.class)
         );
     }
+    @Test
+    public void testThatUpdateGeneratesCorrectSql() {
+        Book book = TestDataUtil.createTestBookA();
+        underTest.update("978-1-2345-6789-0", book);
+
+        verify(jdbcTemplate).update(
+                eq("UPDATE books SET isbn = ?, title = ?, author_id = ? WHERE isbn = ?"),
+                eq("978-1-2345-6789-0"),
+                eq("The Shadow in the Attic"),
+                eq(1L),
+                eq("978-1-2345-6789-0")
+        );
+    }
 }
