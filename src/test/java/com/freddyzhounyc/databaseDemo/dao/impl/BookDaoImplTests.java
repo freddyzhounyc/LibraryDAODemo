@@ -1,5 +1,6 @@
 package com.freddyzhounyc.databaseDemo.dao.impl;
 
+import com.freddyzhounyc.databaseDemo.TestDataUtil;
 import com.freddyzhounyc.databaseDemo.domain.Book;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,11 +23,7 @@ public class BookDaoImplTests {
 
     @Test
     public void testThatCreateBookGeneratesCorrectSql() {
-        Book book = Book.builder()
-                .isbn("978-1-2345-6789-0")
-                .title("The Shadow in the Attic")
-                .author_id(1L)
-                .build();
+        Book book = TestDataUtil.createTestBookA();
         underTest.create(book);
 
         verify(jdbcTemplate).update(
@@ -42,6 +39,15 @@ public class BookDaoImplTests {
                 eq("SELECT isbn, title, author_id FROM books WHERE isbn = ? LIMIT 1"),
                 any(BookDaoImpl.BookRowMapper.class),
                 eq("978-1-2345-6789-0")
+        );
+    }
+    @Test
+    public void testThatFindGeneratesCorrectSql() {
+        underTest.find();
+
+        verify(jdbcTemplate).query(
+                eq("SELECT isbn, title, author_id FROM books"),
+                any(BookDaoImpl.BookRowMapper.class)
         );
     }
 }
