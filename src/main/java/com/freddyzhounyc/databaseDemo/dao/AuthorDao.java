@@ -10,4 +10,5 @@ public interface AuthorDao {
     Optional<Author> findOne(long authorId);
     List<Author> find();
     void update(long id, Author author);
+    void delete(long id);
 }
