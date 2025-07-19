@@ -39,46 +39,46 @@ public class BookRepositoryIntegrationTests {
         assertThat(result).isPresent();
         assertThat(result.get()).isEqualTo(book);
     }
-//    @Test
-//    public void testThatMultipleBooksCanBeCreatedAndRecalled() {
-//        Author author = TestDataUtil.createTestAuthorA();
-//        authorRepository.create(author);
-//
-//        Book bookA = TestDataUtil.createTestBookA();
-//        Book bookB = TestDataUtil.createTestBookB();
-//        Book bookC = TestDataUtil.createTestBookC();
-//
-//        underTest.create(bookA);
-//        underTest.create(bookB);
-//        underTest.create(bookC);
-//
-//        List<Book> result = underTest.find();
-//        assertThat(result)
-//                .hasSize(3)
-//                .containsExactly(bookA, bookB, bookC);
-//    }
-//    @Test
-//    public void testThatBookCanBeUpdated() {
-//        Author author = TestDataUtil.createTestAuthorA();
-//        authorRepository.create(author);
-//        Book bookA = TestDataUtil.createTestBookA();
-//        underTest.create(bookA);
-//
-//        bookA.setTitle("UPDATED");
-//        underTest.update(bookA.getIsbn(), bookA);
-//        Optional<Book> result = underTest.findOne(bookA.getIsbn());
-//        assertThat(result).isPresent();
-//        assertThat(result.get()).isEqualTo(bookA);
-//    }
-//    @Test
-//    public void testThatBookCanBeDeleted() {
-//        Author author = TestDataUtil.createTestAuthorA();
-//        authorRepository.create(author);
-//        Book book = TestDataUtil.createTestBookA();
-//        underTest.create(book);
-//
-//        underTest.delete(book.getIsbn());
-//        Optional<Book> result = underTest.findOne(book.getIsbn());
-//        assertThat(result).isEmpty();
-//    }
+    @Test
+    public void testThatMultipleBooksCanBeCreatedAndRecalled() {
+        Author author = TestDataUtil.createTestAuthorA();
+        authorRepository.save(author);
+
+        Book bookA = TestDataUtil.createTestBookA(author);
+        Book bookB = TestDataUtil.createTestBookB(author);
+        Book bookC = TestDataUtil.createTestBookC(author);
+
+        underTest.save(bookA);
+        underTest.save(bookB);
+        underTest.save(bookC);
+
+        Iterable<Book> result = underTest.findAll();
+        assertThat(result)
+                .hasSize(3)
+                .containsExactly(bookA, bookB, bookC);
+    }
+    @Test
+    public void testThatBookCanBeUpdated() {
+        Author author = TestDataUtil.createTestAuthorA();
+        authorRepository.save(author);
+        Book bookA = TestDataUtil.createTestBookA(author);
+        underTest.save(bookA);
+
+        bookA.setTitle("UPDATED");
+        underTest.save(bookA);
+        Optional<Book> result = underTest.findById(bookA.getIsbn());
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(bookA);
+    }
+    @Test
+    public void testThatBookCanBeDeleted() {
+        Author author = TestDataUtil.createTestAuthorA();
+        authorRepository.save(author);
+        Book book = TestDataUtil.createTestBookA(author);
+        underTest.save(book);
+
+        underTest.deleteById(book.getIsbn());
+        Optional<Book> result = underTest.findById(book.getIsbn());
+        assertThat(result).isEmpty();
+    }
 }
