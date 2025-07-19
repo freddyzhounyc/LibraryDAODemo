@@ -69,4 +69,34 @@ public class AuthorRepositoryIntegrationTests {
         Optional<Author> result = underTest.findById(authorA.getId());
         assertThat(result).isEmpty();
     }
+    @Test
+    public void testThatGetAuthorsWithAgeLessThan() {
+        Author authorA = TestDataUtil.createTestAuthorA();
+        Author authorB = TestDataUtil.createTestAuthorB();
+        Author authorC = TestDataUtil.createTestAuthorC();
+
+        underTest.save(authorA);
+        underTest.save(authorB);
+        underTest.save(authorC);
+
+        Iterable<Author> result = underTest.ageLessThan(50);
+        assertThat(result)
+                .hasSize(2)
+                .containsExactly(authorB, authorC);
+    }
+    @Test
+    public void testThatGetAuthorsWithAgeGreaterThan() {
+        Author authorA = TestDataUtil.createTestAuthorA();
+        Author authorB = TestDataUtil.createTestAuthorB();
+        Author authorC = TestDataUtil.createTestAuthorC();
+
+        underTest.save(authorA);
+        underTest.save(authorB);
+        underTest.save(authorC);
+
+        Iterable<Author> result = underTest.findAuthorsWithAgeGreaterThan(50); // named weird to test both HQL with Spring Data JPA
+        assertThat(result)
+                .hasSize(1)
+                .containsExactly(authorA);
+    }
 }
